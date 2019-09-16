@@ -36,7 +36,7 @@ resource "null_resource" "create-temp-random-dir" {
 }
 
 module "deployVM_infra" {
-  source = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//vmware_provision"
+  source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//vmware_provision"
 
   count  = "${length(keys(var.infra_node_hostname_ip))}"
   
@@ -82,7 +82,7 @@ module "deployVM_infra" {
 }
 
 module "deployVM_master" {
-  source = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//vmware_provision"
+  source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//vmware_provision"
 
   count  = "${length(keys(var.master_node_hostname_ip))}"
 
@@ -127,7 +127,7 @@ module "deployVM_master" {
 }
 
 module "deployVM_etcd" {
-  source = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//vmware_provision"
+  source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//vmware_provision"
 
   count = "${(length(keys(var.etcd_node_hostname_ip)) == length(keys(var.master_node_hostname_ip)) && length(distinct(concat(keys(var.etcd_node_hostname_ip), keys(var.master_node_hostname_ip)))) == length(keys(var.etcd_node_hostname_ip))) ? 0 : length(keys(var.etcd_node_hostname_ip))}"
   
@@ -172,7 +172,7 @@ module "deployVM_etcd" {
 }
 
 module "deployVM_compute" {
-  source = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//vmware_provision"
+  source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//vmware_provision"
 
   count  = "${length(keys(var.compute_node_hostname_ip))}"
   
@@ -216,7 +216,7 @@ module "deployVM_compute" {
 }
 
 module "deployVM_lb" {
-  source = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//vmware_provision"
+  source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//vmware_provision"
 
   count  = "${length(keys(var.lb_node_hostname_ip))}"
   
@@ -260,7 +260,7 @@ module "deployVM_lb" {
 }
 
 module "host_prepare" {
-  source = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//host_prepare"
+  source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//host_prepare"
   
   private_key           = "${length(var.vm_os_private_ssh_key) == 0 ? "${tls_private_key.generate.private_key_pem}" : "${base64decode(var.vm_os_private_ssh_key)}"}"
   vm_os_user            = "${var.vm_os_user}"
@@ -284,7 +284,7 @@ module "host_prepare" {
 }
 
 module "host_prepare_compute" {
-  source = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//host_prepare"
+  source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//host_prepare"
   
   private_key           = "${length(var.vm_os_private_ssh_key) == 0 ? "${tls_private_key.generate.private_key_pem}" : "${base64decode(var.vm_os_private_ssh_key)}"}"
   vm_os_user            = "${var.vm_os_user}"
@@ -308,7 +308,7 @@ module "host_prepare_compute" {
 }
 
 module "config_inventory" {
-  source               = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//config_inventory"
+  source               = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//config_inventory"
   
   private_key               = "${length(var.vm_os_private_ssh_key) == 0 ? "${tls_private_key.generate.private_key_pem}" : "${base64decode(var.vm_os_private_ssh_key)}"}"
   vm_os_user                = "${var.vm_os_user}"
@@ -338,7 +338,7 @@ module "config_inventory" {
 }
 
 module "run_installer" {
-  source               = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//run_installer"
+  source               = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//run_installer"
   
   private_key               = "${length(var.vm_os_private_ssh_key) == 0 ? "${tls_private_key.generate.private_key_pem}" : "${base64decode(var.vm_os_private_ssh_key)}"}"
   vm_os_user                = "${var.vm_os_user}"
@@ -359,7 +359,7 @@ module "run_installer" {
 }
 
 module "scale_node" {
-  source               = "git::https://github.com/IBM-CAMHub-Open/template_openshift_modules.git?ref=3.11//scale_node"
+  source               = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=3.11//scale_node"
   
   private_key           = "${length(var.vm_os_private_ssh_key) == 0 ? "${tls_private_key.generate.private_key_pem}" : "${base64decode(var.vm_os_private_ssh_key)}"}"
   vm_os_user            = "${var.vm_os_user}"
