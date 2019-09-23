@@ -819,6 +819,61 @@
       "system": false,
       "required": true,
       "immutable": false
+    },
+    {
+      "name": "openshift_master_hostname",
+      "type": "string",
+      "description": "OpenShift Installer Master node Hostname.",
+      "hidden": false,
+      "label": "OpenShift Installer Master node Hostname",
+      "secured": false,
+      "system": false,
+      "required": true,
+      "immutable": false
+    },
+    {
+      "name": "openshift_infra_ip",
+      "type": "string",
+      "description": "OpenShift Infrastructure node IP.",
+      "hidden": false,
+      "label": "OpenShift Infrastructure node IP",
+      "secured": false,
+      "system": false,
+      "required": true,
+      "immutable": false
+    },
+    {
+      "name": "openshift_compute1_hostname",
+      "type": "string",
+      "description": "OpenShift Compute node 1 Hostname.",
+      "hidden": false,
+      "label": "OpenShift Compute node 1 Hostname",
+      "secured": false,
+      "system": false,
+      "required": true,
+      "immutable": false
+    },
+    {
+      "name": "openshift_compute2_hostname",
+      "type": "string",
+      "description": "OpenShift Compute node 2 Hostname.",
+      "hidden": false,
+      "label": "OpenShift Compute node 2 Hostname",
+      "secured": false,
+      "system": false,
+      "required": true,
+      "immutable": false
+    },
+    {
+      "name": "openshift_compute3_hostname",
+      "type": "string",
+      "description": "OpenShift Compute node 3 Hostname.",
+      "hidden": false,
+      "label": "OpenShift Compute node 3 Hostname",
+      "secured": false,
+      "system": false,
+      "required": true,
+      "immutable": false
     }
   ]
 }
