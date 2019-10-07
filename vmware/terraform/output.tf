@@ -22,7 +22,7 @@ output "openshift_master_ip" {
 }
 
 output "openshift_master_hostname_ip" {
-  value = "${element(var.master_node_hostname_ip,0)}"
+  value = "${map(element(keys(var.master_node_hostname_ip),0), element(values(var.master_node_hostname_ip),0))}"
 }
 
 output "openshift_infra_ip" {
@@ -34,7 +34,7 @@ output "openshift_compute1_hostname" {
 }
 
 output "openshift_compute2_hostname_ip" {
-  value = "${length(var.compute_node_hostname_ip) > 1 ? element(var.compute_node_hostname_ip,1) : ""}"
+  value = "${map(element(keys(var.compute_node_hostname_ip),1), element(values(var.compute_node_hostname_ip),1))}"
 }
 
 output "openshift_compute3_hostname" {

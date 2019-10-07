@@ -821,8 +821,8 @@
       "immutable": false
     },
     {
-      "name": "openshift_master_hostname",
-      "type": "string",
+      "name": "openshift_master_hostname_ip",
+      "type": "map",
       "description": "OpenShift Installer Master node Hostname.",
       "hidden": false,
       "label": "OpenShift Installer Master node Hostname",
@@ -854,8 +854,8 @@
       "immutable": false
     },
     {
-      "name": "openshift_compute2_hostname",
-      "type": "string",
+      "name": "openshift_compute2_hostname_ip",
+      "type": "map",
       "description": "OpenShift Compute node 2 Hostname.",
       "hidden": false,
       "label": "OpenShift Compute node 2 Hostname",
