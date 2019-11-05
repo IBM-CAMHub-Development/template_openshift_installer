@@ -33,8 +33,8 @@ output "openshift_compute1_hostname" {
   value = "${element(keys(var.compute_node_hostname_ip),0)}"
 }
 
-output "openshift_compute2_hostname_ip" {
-  value = "${map(element(keys(var.compute_node_hostname_ip),1), element(values(var.compute_node_hostname_ip),1))}"
+output "openshift_compute2_hostname" {
+  value = "${element(keys(var.compute_node_hostname_ip),0)}"
 }
 
 output "openshift_compute3_hostname" {

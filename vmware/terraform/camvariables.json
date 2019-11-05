@@ -855,8 +855,8 @@
       "immutable": false
     },
     {
-      "name": "openshift_compute2_hostname_ip",
-      "type": "map",
+      "name": "openshift_compute2_hostname",
+      "type": "string",
       "description": "OpenShift Compute node 2 Hostname.",
       "hidden": false,
       "label": "OpenShift Compute node 2 Hostname",
