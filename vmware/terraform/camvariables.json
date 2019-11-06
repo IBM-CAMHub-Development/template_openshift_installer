@@ -875,6 +875,28 @@
       "system": false,
       "required": true,
       "immutable": false
+    },
+    {
+      "name": "openshift_console_fqdn",
+      "type": "string",
+      "description": "OpenShift Console FQDN.",
+      "hidden": false,
+      "label": "OpenShift Console FQDN",
+      "secured": false,
+      "system": false,
+      "required": true,
+      "immutable": false
+    },
+    {
+      "name": "openshift_console_port",
+      "type": "string",
+      "description": "OpenShift Console Port.",
+      "hidden": false,
+      "label": "OpenShift Console Port",
+      "secured": false,
+      "system": false,
+      "required": true,
+      "immutable": false
     }
   ]
 }

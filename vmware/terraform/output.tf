@@ -6,6 +6,14 @@ output "openshift_url" {
   value = "https://${local.fqdn}:8443"
 }
 
+output "openshift_console_fqdn" {
+  value = "${local.fqdn}"
+}
+
+output "openshift_console_port" {
+  value = "8443"
+}
+
 output "cluster_name" {
   value = "${replace(local.fqdn,".","-")}"
 }
