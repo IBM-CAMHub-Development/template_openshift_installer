@@ -42,7 +42,7 @@ output "openshift_compute1_hostname" {
 }
 
 output "openshift_compute2_hostname" {
-  value = "${element(keys(var.compute_node_hostname_ip),0)}"
+  value = "${element(keys(var.compute_node_hostname_ip),1)}"
 }
 
 output "openshift_compute3_hostname" {
