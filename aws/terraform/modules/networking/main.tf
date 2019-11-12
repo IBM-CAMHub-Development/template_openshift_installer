@@ -319,6 +319,30 @@ resource "aws_route53_record" "apps_private" {
   }
 }
 
+
+resource "aws_security_group" "default" {
+  vpc_id = "${aws_vpc.ocp.id}"
+
+  ingress {
+    protocol  = -1
+    self      = true
+    from_port = 0
+    to_port   = 0
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = "${merge(
+    map("Name", "${var.cluster_name}-default"),
+    map("kubernetes.io/cluster/${var.cluster_name}", "owned")
+  )}"
+}
+
 resource "aws_security_group" "master" {
   name   = "${var.cluster_name}-master"
   vpc_id = "${aws_vpc.ocp.id}"

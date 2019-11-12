@@ -58,6 +58,7 @@ module "bastion" {
   ami           = "${var.rhel_lookup[var.region]}"
 
   security_group_ids = [
+    "${module.networking.security_group_default_id}",
     "${module.networking.security_group_bastion_id}",
     "${module.networking.security_group_bootstrap_id}",
     "${module.networking.security_group_master_id}",
@@ -79,7 +80,7 @@ module "bootstrap" {
   subnet_id                           = "${module.networking.subnet_ocp_public_ids[0]}"
   ami                                 = "${var.rhcos_lookup[var.region]}"
   s3_bucket                           = "${var.s3_bucket}"
-  security_group_ids                  = ["${module.networking.security_group_bootstrap_id}", "${module.networking.security_group_master_id}"]
+  security_group_ids                  = ["${module.networking.security_group_default_id}", "${module.networking.security_group_bootstrap_id}", "${module.networking.security_group_master_id}"]
 }
 
 module "master" {
@@ -98,7 +99,7 @@ module "master" {
   subnet_ids                          = "${module.networking.subnet_ocp_private_ids}"
   ami                                 = "${var.rhcos_lookup[var.region]}"
   s3_bucket                           = "${var.s3_bucket}"
-  security_group_ids                  = ["${module.networking.security_group_master_id}"]
+  security_group_ids                  = ["${module.networking.security_group_default_id}", "${module.networking.security_group_master_id}"]
 }
 
 module "worker" {
@@ -114,7 +115,7 @@ module "worker" {
   subnet_ids                        = "${module.networking.subnet_ocp_private_ids}"
   ami                               = "${var.rhcos_lookup[var.region]}"
   s3_bucket                         = "${var.s3_bucket}"
-  security_group_ids                = ["${module.networking.security_group_worker_id}"]
+  security_group_ids                = ["${module.networking.security_group_default_id}", "${module.networking.security_group_worker_id}"]
 }
 
 module "get_aws_credentials" {

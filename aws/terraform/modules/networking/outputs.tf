@@ -1,3 +1,7 @@
+output "security_group_default_id" {
+  value = "${aws_security_group.default.id}"
+}
+
 output "security_group_master_id" {
   value = "${aws_security_group.master.id}"
 }
