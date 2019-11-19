@@ -394,7 +394,7 @@
       "hidden": false,
       "immutable": false,
       "default": "${openshift42_bootstrap_node_on_vmware.ocp_boot_vm_cpu}",
-      "group": "openshift_bootstrap_node_on_vmware"
+      "group_name": "openshift_bootstrap_node_on_vmware"
     },
     {
       "name": "ocp_boot_vm_disk_size",
@@ -406,7 +406,7 @@
       "hidden": false,
       "immutable": false,
       "default": "${openshift42_bootstrap_node_on_vmware.ocp_boot_vm_disk_size}",
-      "group": "openshift_bootstrap_node_on_vmware"
+      "group_name": "openshift_bootstrap_node_on_vmware"
     },
     {
       "name": "ocp_boot_vm_memory",
@@ -418,7 +418,7 @@
       "hidden": false,
       "immutable": false,
       "default": "${openshift42_bootstrap_node_on_vmware.ocp_boot_vm_memory}",
-      "group": "openshift_bootstrap_node_on_vmware"
+      "group_name": "openshift_bootstrap_node_on_vmware"
     },
     {
       "name": "ocp_cluster_domain",
