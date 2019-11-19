@@ -34,10 +34,6 @@
       "label": "OpenShift Container Platform"
     },
     {
-      "name": "vsphere_managed_inventory_definition",
-      "label": "vSphere Managed Inventory Definition"
-    },
-    {
       "name": "openshift_infra_node_on_vmware",
       "label": "OpenShift Infrastructure Node Settings"
     },

@@ -1,7 +1,7 @@
 {
   "name": "OpenShift Container Platform Enterprise Installation",
   "description": "This template will deploy an enterprise HA-ready version of OpenShift Container Platform",
-  "version": "1.0",
+  "version": "4.2",
   "imageUrl": "",
   "image": "",
   "type": "prebuilt",
@@ -31,7 +31,7 @@
   "description": " VMware vSphere<br>"},
 {
   "title": "Operating Systems Supported",
-  "description": "Redhat 7.4<br>"},
+  "description": "RHEL 7.6 on Infra node, RHCOS 4.2 on OCP cluster nodes<br>"},
 {
   "title": "Topology",
   "description": "Medium/HA<br>"},
