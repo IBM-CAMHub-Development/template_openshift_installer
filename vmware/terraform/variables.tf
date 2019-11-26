@@ -73,7 +73,7 @@ variable "infranode_vm_disk2_keep_on_remove" {
   default = "false"
 }
 
-variable "vm_domain" {
+variable "vm_domain_name" {
   type = "string"
 }
 
@@ -196,21 +196,21 @@ variable "ocp_control_vm_disk_size"{
 }
 
 
-variable "use_static_mac" {
-  type = "string"
-}
+#variable "use_static_mac" {
+#  type = "string"
+#}
 
-variable "mac_address_boot" {
-  type = "list"
-}
+#variable "mac_address_boot" {
+#  type = "list"
+#}
 
-variable "mac_address_control" {
-  type = "list"
-}
+#variable "mac_address_control" {
+#  type = "list"
+#}
 
-variable "mac_address_compute" {
-  type = "list"
-}
+#variable "mac_address_compute" {
+#  type = "list"
+#}
 
 variable "control_plane_count" {
   type = "string"

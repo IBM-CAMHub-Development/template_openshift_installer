@@ -79,7 +79,7 @@ module "deployVM_infranode" {
   vm_template                = "${var.infranode_vm_template}"
   vm_os_password             = "${var.infranode_vm_os_password}"
   vm_os_user                 = "${var.infranode_vm_os_user}"
-  vm_domain                  = "${var.vm_domain}"
+  vm_domain                  = "${var.vm_domain_name}"
   vm_folder                  = "${var.vm_folder}"
   vm_private_ssh_key         = "${length(var.infra_private_ssh_key) == 0 ? "${tls_private_key.generate.private_key_pem}"     : "${base64decode(var.infra_private_ssh_key)}"}"
   vm_public_ssh_key          = "${length(var.infra_public_ssh_key)  == 0 ? "${tls_private_key.generate.public_key_openssh}"  : "${var.infra_public_ssh_key}"}"

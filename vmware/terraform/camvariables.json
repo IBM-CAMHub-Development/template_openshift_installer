@@ -341,10 +341,10 @@
     {
       "name": "infranode_vm_os_password",
       "label": "Infrastructure Node Template User Password",
-      "type": "password",
+      "type": "string",
       "description": "The user password to connect to the Infrastructure Node.",
       "required": true,
-      "secured": false,
+      "secured": true,
       "hidden": false,
       "immutable": false,
       "default": "${vsphere_managed_inventory_definition.vm_os_password}",
