@@ -341,7 +341,7 @@
     {
       "name": "infranode_vm_os_password",
       "label": "Infrastructure Node Template User Password",
-      "type": "string",
+      "type": "password",
       "description": "The user password to connect to the Infrastructure Node.",
       "required": true,
       "secured": false,
@@ -577,6 +577,7 @@
     },
     {
       "name": "vm_private_adapter_type",
+      "default":"${vsphere_managed_inventory_definition.adapter_type}",
       "description": "Private Network adapter type for vNIC Configuration",
       "type": "string",
       "required": true,
