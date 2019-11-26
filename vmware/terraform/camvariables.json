@@ -147,17 +147,6 @@
       "group_name": "openshift_control_plane_node_on_vmware"
     },
     {
-      "name": "enable_nfs",
-      "label": "enable_nfs",
-      "type": "string",
-      "description": "If true, create NFS server VM and mounts worker nodes to server.",
-      "required": true,
-      "secured": false,
-      "hidden": true,
-      "immutable": false,
-      "default": "true"
-    },
-    {
       "name": "infra_private_ssh_key",
       "description": "The user private key to connect to the virtual machine.",
       "default": "${vsphere_managed_inventory_definition.vm_os_private_ssh_key}",
@@ -372,17 +361,6 @@
       "immutable": false,
       "default": "${vsphere_managed_inventory_definition.vm_image_template}",
       "group_name": "openshift_infra_node_on_vmware"
-    },
-    {
-      "name": "nfs_link_folders",
-      "label": "nfs_link_folders",
-      "type": "string",
-      "description": "",
-      "required": true,
-      "secured": false,
-      "hidden": true,
-      "immutable": false,
-      "default": "/var/registry"
     },
     {
       "name": "ocp_boot_vm_cpu",

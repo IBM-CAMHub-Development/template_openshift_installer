@@ -19,6 +19,17 @@ provider "tls" {
   version = "~> 1.0"
 }
 
+#Get from ENV
+data "external" "get_vcenter_details" {
+  program = ["/bin/bash", "./scripts/get_vcenter_details.sh"]
+}
+
+locals{
+	vcenter="${data.external.example.result["vcenter"]}"
+	vcenteruser="${data.external.example.result["vcenteruser"]}"
+	vcenterpassword="${data.external.example.result["vcenterpassword"]}"
+}
+
 resource "random_string" "random-dir" {
   length  = 8
   special = false
@@ -60,7 +71,8 @@ module "deployVM_infranode" {
   #######
   vsphere_datacenter    = "${var.vsphere_datacenter}"
   vsphere_resource_pool = "${var.vsphere_resource_pool}"
-
+  vm_ipv4_private_address = "${var.infra_private_ipv4_address}"
+  vm_private_ipv4_prefix_length = "${var.infra_private_ipv4_prefix_length}"
   vm_vcpu                    = "${var.infranode_vcpu}"
   vm_name                    = "${var.infranode_hostname}"
   vm_memory                  = "${var.infranode_memory}"
@@ -170,12 +182,14 @@ module "vmware_ign_config" {
   domain			= "${var.ocp_cluster_domain}"
   clustername 		= "${var.clustername}"
   controlnodes 		= "${var.control_plane_count}"
+  computenodes 		= "${var.compute_count}"
   vcenter			= "${local.vcenter}"
   vcenteruser		= "${local.vcenteruser}"
   vcenterpassword	= "${local.vcenterpassword}"
   vcenterdatacenter    = "${var.vsphere_datacenter}"
   vmwaredatastore 	= "${var.infranode_vm_disk1_datastore}"  
-  pullsecret		= "${var.pullsecret}"
+  pullsecret		= "${var.pullsecret}"  
+  vm_ipv4_private_address = "${var.infra_private_ipv4_address}"
 }
 
 module "prepare_dns" {
@@ -188,7 +202,7 @@ module "prepare_dns" {
   action            = "setup"
   domain_name       = "${var.ocp_cluster_domain}"
   cluster_name      = "${var.clustername}"  
-  cluster_ip        = "${var.infranode_ip}"
+  cluster_ip        = "${var.infra_private_ipv4_address}"
 
   ## Access to optional bastion host
   bastion_host        = "${var.bastion_host}"
@@ -200,24 +214,49 @@ module "prepare_dns" {
   dependsOn            = "${module.vmware_ign_config.dependsOn}"
 }
 
+module "prepare_dhcp" {
+  source               = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=4.2//vmware/config_dns"
+  
+  dns_server_ip     = "${var.infranode_ip}"
+  vm_os_user        = "${var.infranode_vm_os_user}"
+  vm_os_password    = "${var.infranode_vm_os_password}"
+  private_key       = "${length(var.infra_private_ssh_key) == 0 ? "${tls_private_key.generate.private_key_pem}" : "${base64decode(var.infra_private_ssh_key)}"}"
+  action            = "dhcp"
+  dhcp_interface    = "${module.vmware_ign_config.private_interface}"
+  dhcp_router_ip    = "${var.infra_private_ipv4_address}"
+  dhcp_ip_range_start = "${var.dhcp_ip_range_start}"
+  dhcp_ip_range_end = "${var.dhcp_ip_range_end}"
+  dhcp_netmask = "${var.dhcp_netmask}"
+  dhcp_lease_time = "${var.dhcp_lease_time}"
+
+  ## Access to optional bastion host
+  bastion_host        = "${var.bastion_host}"
+  bastion_user        = "${var.bastion_user}"
+  bastion_private_key = "${var.bastion_private_key}"
+  bastion_port        = "${var.bastion_port}"
+  bastion_host_key    = "${var.bastion_host_key}"
+  bastion_password    = "${var.bastion_password}"
+  dependsOn            = "${module.prepare_dns.dependsOn}"
+}
+
 module "bootstrap" {
   source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=4.2//vmware/machine_boot"
-
+  wait_for_guest_net_timeout = "${var.vm_clone_timeout}"
   name             = "bootstrap"
   instance_count   = "1"
   ignition         = "${module.vmware_ign_config.bootstrap_sec_ign}"
   resource_pool_id = "${module.resource_pool.pool_id}"
   datastore        = "${var.vsphere_datastore}"
   folder           = "${module.folder.path}"
-  network          = "${var.vm_network_interface_label}"
+  network          = "${var.vm_private_network_interface_label}"
   datacenter_id    = "${data.vsphere_datacenter.dc.id}"
   template         = "${var.ocp_vm_template}"
   memory           = "${var.ocp_boot_vm_memory}"
   cpu              = "${var.ocp_boot_vm_cpu}"
   disk_size        = "${var.ocp_boot_vm_disk_size}"
-  use_static_mac   = "${var.use_static_mac}"
-  mac_address      = "${var.mac_address_boot}"
-  dependsOn        = "${module.prepare_dns.dependsOn}"
+  #use_static_mac   = "${var.use_static_mac}"
+  #mac_address      = "${var.mac_address_boot}"
+  dependsOn        = "${module.prepare_dhcp.dependsOn}"
 }
 
 module "HAProxy-config-boot" {
@@ -239,24 +278,43 @@ module "HAProxy-config-boot" {
   dependsOn            = "${module.bootstrap.dependsOn}"
 }
 
+module "wait_for_master_api_url" {
+  source               = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=4.2//vmware/wait_for_api_url" 
+
+  vm_ipv4_address = "${var.infranode_ip}"
+  vm_os_private_key    = "${length(var.infra_private_ssh_key) == 0 ? "${tls_private_key.generate.private_key_pem}" : "${base64decode(var.infra_private_ssh_key)}"}"
+  vm_os_user           = "${var.infranode_vm_os_user}"
+  vm_os_password       = "${var.infranode_vm_os_password}"
+  bastion_host        = "${var.bastion_host}"
+  bastion_user        = "${var.bastion_user}"
+  bastion_private_key = "${var.bastion_private_key}"
+  bastion_port        = "${var.bastion_port}"
+  bastion_host_key    = "${var.bastion_host_key}"
+  bastion_password    = "${var.bastion_password}"
+  ocp_domain			= "${var.ocp_cluster_domain}"
+  ocp_cluster_name 		= "${var.clustername}"    
+  api_type				= "master"       
+  dependsOn            = "${module.HAProxy-config-boot.dependsOn}"
+}
+
 module "control_plane" {
    source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=4.2//vmware/machine_boot"
-
+   wait_for_guest_net_timeout = "${var.vm_clone_timeout}"
    name             = "control-plane"
    instance_count   = "${var.control_plane_count}"
    ignition         = "${module.vmware_ign_config.master_ign}"
    resource_pool_id = "${module.resource_pool.pool_id}"
    folder           = "${module.folder.path}"
    datastore        = "${var.vsphere_datastore}"
-   network          = "${var.vm_network_interface_label}"
+   network          = "${var.vm_private_network_interface_label}"
    datacenter_id    = "${data.vsphere_datacenter.dc.id}"
    template         = "${var.ocp_vm_template}"
    memory           = "${var.ocp_control_vm_memory}"
    cpu              = "${var.ocp_control_vm_cpu}"
    disk_size        = "${var.ocp_control_vm_disk_size}"
-   use_static_mac   = "${var.use_static_mac}"
-   mac_address      = "${var.mac_address_control}"
-   dependsOn        = "${module.HAProxy-config-boot.dependsOn}"
+   #use_static_mac   = "${var.use_static_mac}"
+   #mac_address      = "${var.mac_address_control}"
+   dependsOn        = "${module.wait_for_master_api_url.dependsOn}"
  }
  
  module "set_dns_control" {
@@ -269,10 +327,9 @@ module "control_plane" {
   action            = "addMaster"
   domain_name       = "${var.ocp_cluster_domain}"
   cluster_name      = "${var.clustername}"  
-  cluster_ip        = "${var.infranode_ip}"
-  node_count        = "${var.control_plane_count}"
-  node_ips          = "${module.control_plane.ip}"
-  node_names        = "${module.control_plane.name}"
+  cluster_ip        = "${var.infra_private_ipv4_address}"
+  node_ips          = "${join(",", flatten(module.control_plane.ip))}"
+  node_names        = "${join(",", flatten(module.control_plane.name))}"
   dependsOn            = "${module.control_plane.dependsOn}"
   ## Access to optional bastion host
   bastion_host        = "${var.bastion_host}"
@@ -336,24 +393,43 @@ module "HAProxy-remove-boot" {
   dependsOn            = "${module.HAProxy-config-control.dependsOn}"
 }
 
+module "wait_for_worker_api_url" {
+  source               = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=4.2//vmware/wait_for_api_url" 
+
+  vm_ipv4_address = "${var.infranode_ip}"
+  vm_os_private_key    = "${length(var.infra_private_ssh_key) == 0 ? "${tls_private_key.generate.private_key_pem}" : "${base64decode(var.infra_private_ssh_key)}"}"
+  vm_os_user           = "${var.infranode_vm_os_user}"
+  vm_os_password       = "${var.infranode_vm_os_password}"
+  bastion_host        = "${var.bastion_host}"
+  bastion_user        = "${var.bastion_user}"
+  bastion_private_key = "${var.bastion_private_key}"
+  bastion_port        = "${var.bastion_port}"
+  bastion_host_key    = "${var.bastion_host_key}"
+  bastion_password    = "${var.bastion_password}"
+  ocp_domain			= "${var.ocp_cluster_domain}"
+  ocp_cluster_name 		= "${var.clustername}"    
+  api_type				= "worker"       
+  dependsOn            = "${module.HAProxy-remove-boot.dependsOn}"
+}
+
 module "compute" {
    source = "git::https://github.com/IBM-CAMHub-Development/template_openshift_modules.git?ref=4.2//vmware/machine_boot"
-
+   wait_for_guest_net_timeout = "${var.vm_clone_timeout}"
    name             = "compute"
    instance_count   = "${var.compute_count}"
    ignition         = "${module.vmware_ign_config.worker_ign}"
    resource_pool_id = "${module.resource_pool.pool_id}"
    folder           = "${module.folder.path}"
    datastore        = "${var.vsphere_datastore}"
-   network          = "${var.vm_network_interface_label}"
+   network          = "${var.vm_private_network_interface_label}"
    datacenter_id    = "${data.vsphere_datacenter.dc.id}"
    template         = "${var.ocp_vm_template}"
    memory           = "${var.ocp_compute_vm_memory}"
    cpu              = "${var.ocp_compute_vm_cpu}"
    disk_size        = "${var.ocp_compute_vm_disk_size}"
-   use_static_mac   = "${var.use_static_mac}"
-   mac_address      = "${var.mac_address_compute}"
-   dependsOn        = "${module.HAProxy-remove-boot.dependsOn}"
+   #use_static_mac   = "${var.use_static_mac}"
+   #mac_address      = "${var.mac_address_compute}"
+   dependsOn        = "${module.wait_for_worker_api_url.dependsOn}"
 }
 
 module "set_dns_compute" {
@@ -366,10 +442,9 @@ module "set_dns_compute" {
   action            = "addWorker"
   domain_name       = "${var.ocp_cluster_domain}"
   cluster_name      = "${var.clustername}"  
-  cluster_ip        = "${var.infranode_ip}"
-  node_count        = "${var.compute_count}"
-  node_ips          = "${module.compute.ip}"
-  node_names        = "${module.compute.name}"
+  cluster_ip        = "${var.infra_private_ipv4_address}"
+  node_ips          = "${join(",", flatten(module.compute.ip))}"  
+  node_names        = "${join(",", flatten(module.compute.name))}"  
   dependsOn            = "${module.compute.dependsOn}"
   ## Access to optional bastion host
   bastion_host        = "${var.bastion_host}"
@@ -430,7 +505,7 @@ module "config_image_registry" {
   bastion_port        = "${var.bastion_port}"
   bastion_host_key    = "${var.bastion_host_key}"
   bastion_password    = "${var.bastion_password}"      
-  nfs_ipv4_address    =  "${var.infranode_ip}"
+  nfs_ipv4_address    =  "${var.infra_private_ipv4_address}"
   nfs_path            =   "/var/nfs/registry"
   dependsOn            = "${module.complete_bootstrap.dependsOn}"
 }

@@ -2,6 +2,16 @@ variable "infranode_hostname" {
   type    = "string"
 }
 
+variable "infra_private_ipv4_address" {
+  type = "string"
+  default = "192.168.1.1"
+}
+
+variable "infra_private_ipv4_prefix_length" {
+  type = "string"
+  default = "24"
+}
+
 variable "infranode_ip" {
   type    = "string"
 }
@@ -121,10 +131,12 @@ variable "infra_public_ssh_key" {
 
 variable "nfs_link_folders" {
   type    = "string"
+  default = "/var/registry"
 }
 
 variable "enable_nfs" { 
-  type = "string" 
+  type = "string"
+  default = "true" 
 }
 
 variable "ocversion"{
@@ -210,4 +222,27 @@ variable "compute_count" {
 
 variable "pullsecret" {
   type = "string"
+}
+
+variable "dhcp_ip_range_start"{ 
+  default = "192.168.1.220"     
+  type = "string"  
+  description = "IP address for the start of the DHCP IP address range"
+}
+
+variable "dhcp_ip_range_end"{
+  default = "192.168.1.230"
+  type = "string"
+  description = "IP address for the end of the DHCP IP address range" 
+}
+variable "dhcp_netmask"{
+  default = "255.255.255.0"     
+  type = "string"  
+  description = "Netmask used for the DHCP configuration" 
+}
+
+variable "dhcp_lease_time"{
+  default = "600"     
+  type = "string"  
+  description = "Length of time to be assigned to a DHCP lease" 
 }
