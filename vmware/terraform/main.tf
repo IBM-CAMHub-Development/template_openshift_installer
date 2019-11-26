@@ -25,9 +25,9 @@ data "external" "get_vcenter_details" {
 }
 
 locals{
-	vcenter="${data.external.example.result["vcenter"]}"
-	vcenteruser="${data.external.example.result["vcenteruser"]}"
-	vcenterpassword="${data.external.example.result["vcenterpassword"]}"
+	vcenter="${data.external.get_vcenter_details.result["vcenter"]}"
+	vcenteruser="${data.external.get_vcenter_details.result["vcenteruser"]}"
+	vcenterpassword="${data.external.get_vcenter_details.result["vcenterpassword"]}"
 }
 
 resource "random_string" "random-dir" {
