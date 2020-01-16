@@ -1,6 +1,6 @@
 {
-    "name": "Red Hat Openshift Container Platform Cluster on Amazon Web Services",
-    "description": "This template will deploy Red Hat Openshift Container Platform in a high availability configuration",
+    "name": "Red Hat Openshift Container Platform Cluster on Amazon Web Services (Terraform 0.12.x)",
+    "description": "This template will deploy Red Hat Openshift Container Platform in a high availability configuration (Terraform 0.12.x)",
     "version": "1.0",
     "imageUrl": "",
     "image": "",
