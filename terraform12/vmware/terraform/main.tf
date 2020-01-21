@@ -51,14 +51,14 @@ data "vsphere_datacenter" "dc" {
 }
 
 module "folder" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/folder?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/folder?ref=4.2"
 
   path          = var.clustername
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 module "resource_pool" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/resource_pool?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/resource_pool?ref=4.2"
   
   name            = var.clustername
   datacenter_id   = data.vsphere_datacenter.dc.id
@@ -66,7 +66,7 @@ module "resource_pool" {
 }
 
 module "deployVM_infranode" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/vmware_infravm_provision?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/vmware_infravm_provision?ref=4.2"
   
   #######
   vsphere_datacenter                 = var.vsphere_datacenter
@@ -112,7 +112,7 @@ module "deployVM_infranode" {
 }
 
 module "NFSServer-Setup" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_nfs_server?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_nfs_server?ref=4.2"
   
   vm_ipv4_address   = var.infranode_ip
   vm_os_private_key = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -133,7 +133,7 @@ module "NFSServer-Setup" {
 }
 
 module "HTTPServer-Setup" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_apache_web_server?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_apache_web_server?ref=4.2"
   
   vm_ipv4_address     = var.infranode_ip
   vm_os_private_key   = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -149,7 +149,7 @@ module "HTTPServer-Setup" {
 }
 
 module "HAProxy-install" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
   
   vm_ipv4_address     = var.infranode_ip
   vm_os_private_key   = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -166,7 +166,7 @@ module "HAProxy-install" {
 }
 
 module "vmware_ign_config" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/vmware_ign_config?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/vmware_ign_config?ref=4.2"
   
 
   vm_ipv4_address          = var.infranode_ip
@@ -195,7 +195,7 @@ module "vmware_ign_config" {
 }
 
 module "prepare_dns" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_dns?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_dns?ref=4.2"
   
   dns_server_ip  = var.infranode_ip
   vm_os_user     = var.infranode_vm_os_user
@@ -217,7 +217,7 @@ module "prepare_dns" {
 }
 
 module "prepare_dhcp" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_dns?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_dns?ref=4.2"
   
   dns_server_ip       = var.infranode_ip
   vm_os_user          = var.infranode_vm_os_user
@@ -242,7 +242,7 @@ module "prepare_dhcp" {
 }
 
 module "bootstrap" {
-  source                     = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/machine_boot?ref=4.2"
+  source                     = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/machine_boot?ref=4.2"
   
   wait_for_guest_net_timeout = var.vm_clone_timeout
   name                       = "bootstrap"
@@ -274,7 +274,7 @@ module "bootstrap" {
 }
 
 module "HAProxy-config-boot" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
   
   vm_ipv4_address                = var.infranode_ip
   vm_os_private_key              = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -293,7 +293,7 @@ module "HAProxy-config-boot" {
 }
 
 module "wait_for_master_api_url" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/wait_for_api_url?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/wait_for_api_url?ref=4.2"
   
   vm_ipv4_address     = var.infranode_ip
   vm_os_private_key   = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -312,7 +312,7 @@ module "wait_for_master_api_url" {
 }
 
 module "control_plane" {
-  source                     = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/machine_boot?ref=4.2"
+  source                     = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/machine_boot?ref=4.2"
   
   wait_for_guest_net_timeout = var.vm_clone_timeout
   name                       = "control-plane"
@@ -363,7 +363,7 @@ module "control_plane" {
 }
  
 module "set_dns_control" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_dns?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_dns?ref=4.2"
   
   dns_server_ip  = var.infranode_ip
   vm_os_user     = var.infranode_vm_os_user
@@ -387,7 +387,7 @@ module "set_dns_control" {
 }
 
 module "monitor_controlplane_bootstrap" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/monitor_controlplane_bootstrap?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/monitor_controlplane_bootstrap?ref=4.2"
   
   vm_ipv4_address     = var.infranode_ip
   vm_os_private_key   = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -404,7 +404,7 @@ module "monitor_controlplane_bootstrap" {
 }
 
 module "HAProxy-config-control" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
   
   vm_ipv4_address                = var.infranode_ip
   vm_os_private_key              = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -422,7 +422,7 @@ module "HAProxy-config-control" {
 }
 
 module "HAProxy-remove-boot" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
   
   vm_ipv4_address                = var.infranode_ip
   vm_os_private_key              = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -440,7 +440,7 @@ module "HAProxy-remove-boot" {
 }
 
 module "wait_for_worker_api_url" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/wait_for_api_url?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/wait_for_api_url?ref=4.2"
   
   vm_ipv4_address     = var.infranode_ip
   vm_os_private_key   = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -459,7 +459,7 @@ module "wait_for_worker_api_url" {
 }
 
 module "compute" {
-  source                     = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/machine_boot?ref=4.2"
+  source                     = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/machine_boot?ref=4.2"
   
   wait_for_guest_net_timeout = var.vm_clone_timeout
   name                       = "compute"
@@ -510,7 +510,7 @@ module "get_compute_ip" {
 }
 
 module "set_dns_compute" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_dns?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_dns?ref=4.2"
   
   dns_server_ip  = var.infranode_ip
   vm_os_user     = var.infranode_vm_os_user
@@ -534,7 +534,7 @@ module "set_dns_compute" {
 }
 
 module "HAProxy-config-compute" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_lb_server?ref=4.2"
   
   vm_ipv4_address          = var.infranode_ip
   vm_os_private_key        = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -552,7 +552,7 @@ module "HAProxy-config-compute" {
 }
 
 module "complete_bootstrap" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/complete_bootstrap?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/complete_bootstrap?ref=4.2"
   
   vm_ipv4_address     = var.infranode_ip
   vm_os_private_key   = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -573,7 +573,7 @@ module "complete_bootstrap" {
 }
 
 module "config_image_registry" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/config_image_registry?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/config_image_registry?ref=4.2"
   
   vm_ipv4_address     = var.infranode_ip
   vm_os_private_key   = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -591,7 +591,7 @@ module "config_image_registry" {
 }
 
 module "complete_install" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/complete_install?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/complete_install?ref=4.2"
   
   vm_ipv4_address     = var.infranode_ip
   vm_os_private_key   = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
@@ -607,7 +607,7 @@ module "complete_install" {
 }
 
 module "set_permanent_ip" {
-  source = "github.com/IBM-CAMHub-Open/template_openshift_modules.git//vmware/set_permanent_ip?ref=4.2"
+  source = "github.com/IBM-CAMHub-Development/template_openshift_modules.git//vmware/set_permanent_ip?ref=4.2"
   
   vm_ipv4_address   = var.infranode_ip
   vm_os_private_key = length(var.infra_private_ssh_key) == 0 ? tls_private_key.generate.private_key_pem : base64decode(var.infra_private_ssh_key)
