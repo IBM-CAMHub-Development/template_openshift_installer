@@ -1,6 +1,6 @@
 {
-  "name": "OpenShift Container Platform Enterprise Installation",
-  "description": "This template will deploy an enterprise HA-ready version of OpenShift Container Platform",
+  "name": "OpenShift Container Platform Enterprise Installation for Terrafrom 0.12.x",
+  "description": "This template will deploy an enterprise HA-ready version of OpenShift Container Platform. This template uses Terraform 0.12.x engine.",
   "version": "4.2",
   "imageUrl": "",
   "image": "",
@@ -25,7 +25,7 @@
   "metadata": {
     "displayName": "OpenShift Container Platform Enterprise Installation",
     "providerDisplayName": "VMware vSphere",
-    "longDescription": "This template will deploy an enterprise, HA-ready version of OpenShift Container Platform",
+    "longDescription": "This template will deploy an enterprise, HA-ready version of OpenShift Container Platform. This template uses Terraform 0.12.x engine.",
     "bullets": [{
   "title": "Clouds",
   "description": " VMware vSphere<br>"},
@@ -43,7 +43,7 @@
   "description": " vCPU 8, Memory (GB) 16, Disk (GB) 400<br>"},
 {
   "title": "Usage and Special Notes",
-  "description": ""
+  "description": "This template run on Terraform 0.12.x engine."
 }
 ],
     "featuredImageUrl": "",
