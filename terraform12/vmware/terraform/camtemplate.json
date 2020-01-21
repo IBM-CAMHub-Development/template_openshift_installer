@@ -43,7 +43,7 @@
   "description": " vCPU 8, Memory (GB) 16, Disk (GB) 400<br>"},
 {
   "title": "Usage and Special Notes",
-  "description": "This template run on Terraform 0.12.x engine."
+  "description": "This template runs on Terraform 0.12.x engine."
 }
 ],
     "featuredImageUrl": "",
